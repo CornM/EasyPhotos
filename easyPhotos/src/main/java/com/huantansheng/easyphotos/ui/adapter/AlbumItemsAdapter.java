@@ -1,8 +1,8 @@
 package com.huantansheng.easyphotos.ui.adapter;
 
 import android.content.Context;
-import android.support.constraint.ConstraintLayout;
-import android.support.v7.widget.RecyclerView;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +33,8 @@ public class AlbumItemsAdapter extends RecyclerView.Adapter {
     private OnClickListener listener;
     private int adPosition = 0;
     private int padding = 0;
+
+    private boolean clearAd = false;
 
     public interface OnClickListener {
         void onAlbumItemClick(int position, int realPosition);
@@ -69,7 +71,7 @@ public class AlbumItemsAdapter extends RecyclerView.Adapter {
                 ((AlbumItemsViewHolder) holder).mRoot.setPadding(padding, padding, padding, 0);
             }
             AlbumItem item = (AlbumItem) dataList.get(p);
-            Setting.imageEngine.loadPhoto(((AlbumItemsViewHolder) holder).ivAlbumCover.getContext(), item.coverImagePath, ((AlbumItemsViewHolder) holder).ivAlbumCover);
+            Setting.imageEngine.loadPhoto(((AlbumItemsViewHolder) holder).ivAlbumCover.getContext(), item.coverImageUri, ((AlbumItemsViewHolder) holder).ivAlbumCover);
             ((AlbumItemsViewHolder) holder).tvAlbumName.setText(item.name);
             ((AlbumItemsViewHolder) holder).tvAlbumPhotosCount.setText(String.valueOf(item.photos.size()));
             if (selectedPosition == p) {
@@ -98,6 +100,11 @@ public class AlbumItemsAdapter extends RecyclerView.Adapter {
         }
 
         if (holder instanceof AdViewHolder) {
+            if (clearAd) {
+                ((AdViewHolder) holder).adFrame.removeAllViews();
+                ((AdViewHolder) holder).adFrame.setVisibility(View.GONE);
+                return;
+            }
             adPosition = p;
             if (!Setting.albumItemsAdIsOk) {
                 ((AdViewHolder) holder).adFrame.setVisibility(View.GONE);
@@ -120,6 +127,11 @@ public class AlbumItemsAdapter extends RecyclerView.Adapter {
                 }
             }
         }
+    }
+
+    public void clearAd() {
+        clearAd = true;
+        notifyDataSetChanged();
     }
 
     public void setSelectedPosition(int position) {

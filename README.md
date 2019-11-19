@@ -2,6 +2,7 @@
 [![](https://jitpack.io/v/HuanTanSheng/EasyPhotos.svg)](https://jitpack.io/#HuanTanSheng/EasyPhotos)    
 
 QQ交流群：[288600953](https://jq.qq.com/?_wv=1027&k=5QGgCDe)    
+[demo下载](https://raw.githubusercontent.com/HuanTanSheng/EasyPhotos/master/demo/release/demo-release.apk)    
 
   
 
@@ -32,26 +33,38 @@ QQ交流群：[288600953](https://jq.qq.com/?_wv=1027&k=5QGgCDe)
     
     
 ## 产品特色    
-- 支持绑定Glide、Picasso、Fresco、Imageloader等所有图片加载库，EasyPhotos并没有对他们进行依赖，不必担心冲突和体积问题。     
+- 兼容android 10
+- 支持绑定Glide、Picasso、Imageloader等所有图片加载库（fresco暂不支持），EasyPhotos并没有对他们进行依赖，不必担心冲突和体积问题。     
 - 状态栏字体颜色智能适配，当状态栏颜色趋近于白色时，字体颜色智能处理为深色     
 - 内部处理运行时权限，使用者无需考虑权限问题    
+- 清晰预览超大图和长图  
 - 拼一张功能（可配置开关，可独立作为拼图使用）    
 - 原图功能（可配置开关）    
 - 广告填充（可配置开关）     
 - 过滤图片（图片宽度、图片高度、文件大小三个维度任意选择和搭配）
 - 默认勾选图片（可配置）    
 - 图片预览（可全屏，可缩放）    
+- 支持动图gif显示，并支持只显示动图gif
+- 支持视频video显示，并支持只显示视频video
 - UI色值高度浓缩，仅为7种，自定义超简单     
 - 对Gif动图的处理（可配置开关是否显示，列表中以静态图+动图标识显示，预览大图时自动播放）    
 - 自带Bitmap相关方法（如添加水印、把View画成Bitmap、保存Bitmap等）    
 - 自带媒体库相关方法（如媒体文件更新到媒体库）    
 
-## 关于EasyPhotos的SDK及相关版本公示 
-compileSdkVersion 27  
+## 关于EasyPhotos的SDK及相关版本公示（androidx版本） 
+compileSdkVersion 29  
 minSdkVersion 15  
-targetSdkVersion 27      
-buildToolsVersion '27.0.3'    
-QQ交流群：[288600953](https://jq.qq.com/?_wv=1027&k=5QGgCDe)    
+targetSdkVersion 29      
+QQ交流群：[288600953](https://jq.qq.com/?_wv=1027&k=5QGgCDe)      
+[demo下载](https://raw.githubusercontent.com/HuanTanSheng/EasyPhotos/master/demo/release/demo-release.apk)     
+
+## 关于EasyPhotos的SDK及相关版本公示（support版本） 
+compileSdkVersion 28  
+minSdkVersion 15  
+targetSdkVersion 28      
+buildToolsVersion '28.0.3'    
+QQ交流群：[288600953](https://jq.qq.com/?_wv=1027&k=5QGgCDe)      
+
 
 
 ## 获取EasyPhotos（通过Gradle方式）
@@ -71,8 +84,10 @@ allprojects {
 ```gradle
 dependencies {  
 
-    implementation 'com.github.HuanTanSheng:EasyPhotos:2.3.4'  
-    
+        implementation 'com.github.HuanTanSheng:EasyPhotos:3.0.3' //androidx版本，支持android 10，永久维护
+      
+        //implementation 'com.github.HuanTanSheng:EasyPhotos:2.4.5' //还没有升级到androidx的同学可以用这个版本，但不支持android 10，暂停维护
+   
 }
 ```    
     
@@ -81,13 +96,13 @@ dependencies {
 
     
        
-**如果你的 `android studio` 版本不同于3.1.0正式版，有可能会打不开我的Demo，只需要修改Demo里面 `build.gradle（project）` 文件中的：**     
+**如果你的 `android studio` 版本低于3.4.2版，有可能会打不开我的Demo，只需要修改Demo里面 `build.gradle（project）` 文件中的：**     
 
 ```gradle  
 
 dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.0'
-	//把3.1.0改成你对应的版本即可，如果不清楚对应版本可以看看你其他正常项目的这里是怎么写的  
+        classpath 'com.android.tools.build:gradle:3.4.2'
+	//把3.4.2改成你对应的版本即可，如果不清楚对应版本可以看看你其他正常项目的这里是怎么写的  
 	}
 
 ```    
@@ -138,7 +153,77 @@ EasyPhotos将在高颜值、高兼容、高性能、强功能的道路上持续�
 QQ交流群：[288600953](https://jq.qq.com/?_wv=1027&k=5QGgCDe)      
 
 
-## 更新日志    
+## 更新日志 
+**3.0.3：**
+- 修复：修复华为nova 5i pro 在相机页面点击返回时产生的崩溃问题 #87
+
+**3.0.2：**
+- 重要：拼图和加水印功能适配android 10
+- 感谢：该版本由[zhangshaobo87](https://github.com/zhangshaobo87)贡献 
+
+**3.0.1：**
+- 重要：兼容android 10
+- 重要：因为android 10 不支持用path路径显示图片，所以回调取消了单独获取path集合的回调，只保留获取Photo集合的回调，如需使用path，可以在Photo对象中获取
+- 重要：ImageEngine接口（因为android 10 不支持用path路径显示图片，所以全部改为Uri的形式），望升级用户周知
+
+**2.5.2：** 
+- 优化：修复ArrayList在多线程中addItem出现的角标越界问题
+
+**2.4.9：** 
+- 重要：升级到gradle:3.4.2，低版本studio可能因为该项升级而产生错误，建议升级studio或手动修改classpath 'com.android.tools.build:gradle:3.4.2'到你的可用版本
+- 优化：修复预览视频封面为黑色图片问题 
+
+**2.4.8：** 
+- 优化：修复预览页预览大图片和长图片时清晰度模糊问题   
+
+**2.4.7：** 
+- 优化：修复相册页在部分机型会闪现权限提醒UI问题   
+
+**2.4.6：** 
+- 优化：支持androidx
+
+**2.4.5：** 
+- 修复：当相机按钮位置在图片第一张时，点击相册页底部中间的编辑按钮会导致右下角相机按钮也显示出来
+- 修复：仅显示视频时，全部视频文件夹视频重复添加问题
+- 修复：点击视频无法播放问题
+- 感谢：该版本由[SMask](https://github.com/SMask)贡献 
+   
+**2.4.4：**     
+- 修复：修复2.4.3版本引发的图片数据加载缓慢问题
+- 感谢：该版本由[joker-fu](https://github.com/joker-fu)贡献
+   
+**2.4.3：**     
+- 新增：start(SelectCallback callback)启动方式，通过接口回调数据
+- 新增：filter(String... types)方式控制只显示的文件类型，支持Type.GIF和Type.VIDEO，前提是已经选择显示了gif和video
+- 新增：对显示视频的时长过滤api
+- 新增：单独对图片和视频的最大选择数控制
+- 新增：支持相机按钮位置设置，setCameraLocation(@Setting.Location int cLocation)//默认左下角，通过设置可设置为相册第一张图片的位置    
+- 优化：预览页
+- 感谢：该版本由[joker-fu](https://github.com/joker-fu)、[SMask](https://github.com/SMask)贡献 
+- 提示：新的api详见[wiki](https://github.com/HuanTanSheng/EasyPhotos/wiki/02-%E7%9B%B8%E6%9C%BA%E4%B8%8E%E7%9B%B8%E5%86%8C) 
+   
+**2.4.1：**     
+- 优化：2.4.0中的代码
+- 感谢：该版本由[joker-fu](https://github.com/joker-fu)、[SMask](https://github.com/SMask)贡献
+        
+**2.4.0：**     
+- 感谢：该版本由[joker-fu](https://github.com/joker-fu)贡献
+- 新增：视频选择功能    
+- 新增API：是否启动视频选择，setVideo（boolean shouldShow）    
+- 优化：默认不显示gif图，可通过setGif（boolean shouldShow）控制是否显示    
+
+**2.3.6：**     
+- 修复：2.3.5出现的拼图错误    
+- 优化：解决部分机型在全屏预览图片返回到相册选择界面时状态栏闪烁的问题（感谢@wqxcloud）    
+- 优化：相册UI（将原底部操作栏中间的设置按钮样式改为编辑样式）        
+- 新增：相册页底部操作栏中间的编辑按钮，会根据开发者配置的清空按钮、原图按钮、拼图按钮使用情况进行显示或隐藏。（当清空按钮、原图按钮、拼图按钮都不显示时，编辑按钮隐藏。其余条件均显示。）    
+- 新增：可配置相册页清空按钮是否显示（详见wiki）       
+    
+**2.3.5：**     
+- 修复：修复文字贴纸自动生成日期错误    
+- 优化：AlbumModel类，更加节省内存 （感谢@ofexe）   
+- 升级：compileSdkVersion 升级为28，buildToolsVersion 升级为 '28.0.3'    
+    
 **2.3.4：**    
 - 修复：坚果pro和荣耀8在特殊情况下无法获取媒体文件路径的问题        
     

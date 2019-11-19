@@ -1,7 +1,9 @@
 package com.huantansheng.easyphotos.ui.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import com.huantansheng.easyphotos.R;
 import com.huantansheng.easyphotos.constant.Type;
 import com.huantansheng.easyphotos.models.album.entity.Photo;
 import com.huantansheng.easyphotos.setting.Setting;
+import com.huantansheng.easyphotos.utils.media.DurationUtils;
 
 import java.util.ArrayList;
 
@@ -48,17 +51,20 @@ public class PuzzleSelectorAdapter extends RecyclerView.Adapter {
         Photo photo = dataList.get(position);
         String path = photo.path;
         String type = photo.type;
-        if (Setting.showGif) {
-            if (path.endsWith(Type.GIF) || type.endsWith(Type.GIF)) {
-                Setting.imageEngine.loadGifAsBitmap(((PhotoViewHolder) holder).ivPhoto.getContext(), path, ((PhotoViewHolder) holder).ivPhoto);
-                ((PhotoViewHolder) holder).tvGif.setVisibility(View.VISIBLE);
-            } else {
-                Setting.imageEngine.loadPhoto(((PhotoViewHolder) holder).ivPhoto.getContext(), path, ((PhotoViewHolder) holder).ivPhoto);
-                ((PhotoViewHolder) holder).tvGif.setVisibility(View.GONE);
-            }
+        Uri uri = photo.uri;
+        long duration = photo.duration;
+        final boolean isGif = path.endsWith(Type.GIF) || type.endsWith(Type.GIF);
+        if (Setting.showGif && isGif) {
+            Setting.imageEngine.loadGifAsBitmap(((PhotoViewHolder) holder).ivPhoto.getContext(), uri, ((PhotoViewHolder) holder).ivPhoto);
+            ((PhotoViewHolder) holder).tvType.setText(R.string.gif_easy_photos);
+            ((PhotoViewHolder) holder).tvType.setVisibility(View.VISIBLE);
+        } else if (Setting.showVideo && type.contains(Type.VIDEO)) {
+            Setting.imageEngine.loadPhoto(((PhotoViewHolder) holder).ivPhoto.getContext(), uri, ((PhotoViewHolder) holder).ivPhoto);
+            ((PhotoViewHolder) holder).tvType.setText(DurationUtils.format(duration));
+            ((PhotoViewHolder) holder).tvType.setVisibility(View.VISIBLE);
         } else {
-            Setting.imageEngine.loadPhoto(((PhotoViewHolder) holder).ivPhoto.getContext(), path, ((PhotoViewHolder) holder).ivPhoto);
-            ((PhotoViewHolder) holder).tvGif.setVisibility(View.GONE);
+            Setting.imageEngine.loadPhoto(((PhotoViewHolder) holder).ivPhoto.getContext(), uri, ((PhotoViewHolder) holder).ivPhoto);
+            ((PhotoViewHolder) holder).tvType.setVisibility(View.GONE);
         }
 
         ((PhotoViewHolder) holder).ivPhoto.setOnClickListener(new View.OnClickListener() {
@@ -82,12 +88,12 @@ public class PuzzleSelectorAdapter extends RecyclerView.Adapter {
 
     public class PhotoViewHolder extends RecyclerView.ViewHolder {
         ImageView ivPhoto;
-        TextView tvGif;
+        TextView tvType;
 
         public PhotoViewHolder(View itemView) {
             super(itemView);
             this.ivPhoto = (ImageView) itemView.findViewById(R.id.iv_photo);
-            this.tvGif = (TextView) itemView.findViewById(R.id.tv_gif);
+            this.tvType = (TextView) itemView.findViewById(R.id.tv_type);
         }
     }
 }
